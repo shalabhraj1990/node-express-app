@@ -2,14 +2,20 @@ const express = require('express');
 const chalk = require('chalk');
 const debug = require('debug')('app');
 const morgan = require('morgan');
-
+const path = require('path');
+const PORT = process.env.PORT || 3000;
+//middleware
 const app = express();
 app.use(morgan('short'));
+app.use(express.static(path.join(__dirname,'/public/')));
+//template engin ejs
+app.set('views','./src/veiws');
+app.set('view engine','ejs');
 
 app.get('/',(req,res) => {
-    res.send("hello from express app");
+    res.render('index',{title:'welcome to goabalmantics',data:['a','b','c']});
 });
 
-app.listen(3000,() =>{
-    debug(`listening at port ${chalk.green('3000')}`);
+app.listen(PORT,() =>{
+    debug(`listening at PORT ${chalk.green(PORT)}`);
 });
