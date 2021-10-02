@@ -1,5 +1,5 @@
 const express = require('express');
-const debug = require('debug')('adminRouter');
+const debug = require('debug')('app:adminRouter');
 const { MongoClient } = require('mongodb');
 const sessions = require('../data/sessions.json');
 
@@ -16,6 +16,7 @@ adminRouter.route('/')
                 const db = client.db(dbName);
                 const response = await db.collection('sessions').insertMany(sessions);
                 res.json(response);
+                client.close();
             }
             catch (err) {
                 debug(err.stack);
