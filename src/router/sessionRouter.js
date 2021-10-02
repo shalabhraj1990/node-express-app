@@ -1,6 +1,7 @@
 const express = require('express');
 const debug = require('debug')('app:sessionRouter');
 const { MongoClient ,ObjectId} = require('mongodb');
+const speckerService = require('../services/speckerService');
 
 const sessionRouter = express.Router();
 //middleware
@@ -43,6 +44,8 @@ sessionRouter.route('/:id')
                 let client = await MongoClient.connect(url);
                 const db = client.db(dbName);
                 const session = await db.collection('sessions').findOne({_id:new ObjectId(id)});
+                const speaker = await speckerService.getSpeakerById(session.speakers[0].id);
+                session.speaker = speaker.data;
                 res.render('session',{session});
             }
             catch (err) {
